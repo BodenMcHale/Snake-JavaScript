@@ -2,7 +2,7 @@
 // Remove 'Start the game by hitting Enter' when the game starts
 // Move Score, Max score, Deaths, to bottom of screen
 // Add toggle to looping vs instant game over, use Shift key
-
+// Add lostrabbitdigital.com hyperlink <a href='https://www.lostrabbitdigital.com><a>
 // Section of the snake, only has the X and Y coordinate
 class SnakePart {
 

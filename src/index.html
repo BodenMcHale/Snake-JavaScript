@@ -1,28 +1,21 @@
 <html>
-
 <head>
-
-	<title>Snake</title>
-
+	<title>Snake Game</title>
 </head>
-
 <body>
-
-	<h2 style="font-family: Courier New">Start the game by hiting Enter</h2>
-	<h2 style="font-family: Courier New">Score: <span id="score"></span> </h2>
-	<h2 style="font-family: Courier New">Max score: <span id="max_score"></span> </h2>
-	<h2 style="font-family: Courier New">Deaths: <span id="deaths"></span> </h2>
-	<span style="font-family: Courier New">Move with the arrow keys | pause or continue with Enter</span>
 	<div id="stage" style="position:relative"></div>
-
+	<div id="contents" style="position:relative; top:420px">
+		<h3 style="font-family: Courier New">Score: <span id="score"></span> </h3>
+		<h3 style="font-family: Courier New">Max score: <span id="max_score"></span> </h3>
+		<h3 style="font-family: Courier New">Deaths: <span id="deaths"></span> </h3>
+		<p style="font-family: Courier New">Move with the Arrow Keys</p>
+		<p style="font-family: Courier New">pause or continue with 'Enter'</p>
+		<p style="font-family: Courier New">Toggle looping with 'Shift'</p>
+		<a href="https://www.lostrabbitdigital.com" style="font-family: Courier New; font-size: larger;">Lost Rabbit Digital</a>
+	</div>
 </body>
-
 	<script src="snake.js"></script>
-
 	<script type="text/javascript">
-
 		var game = new Game(20, 10, "stage", "score", "deaths", "max_score");
-
 	</script>
-
 </html>
