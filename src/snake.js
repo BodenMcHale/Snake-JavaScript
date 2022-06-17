@@ -24,6 +24,7 @@
     - Redo key inputs
     - Add sfx
     - Reformat code
+    - Update index.html
 
     Author
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
