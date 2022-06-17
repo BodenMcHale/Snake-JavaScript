@@ -1,9 +1,7 @@
-// ADD SNAKE HIT DETECTION SO IT DOESN'T SPAWN ON THE SNAKE
+// ADD SNAKE HIT DETECTION on food SO IT DOESN'T SPAWN ON THE SNAKE
 // Remove 'Start the game by hitting Enter' when the game starts
-// Move Score, Max score, Deaths, to bottom of screen
 // Add toggle to looping vs instant game over, use Shift key
-// Add lostrabbitdigital.com hyperlink <a href='https://www.lostrabbitdigital.com><a>
-
+// redo key inputs
 
 // Section of the snake, only has the X and Y coordinate
 class SnakePart {
@@ -18,9 +16,11 @@ class SnakePart {
 }
 
 // The whole snake
-class Snake {
+class Snake 
+{
 
-	constructor(game, x, y, initialPartsAmount) {
+	constructor(game, x, y, initialPartsAmount) 
+	{
 
 		this.game = game;
 		this.x = x;
@@ -40,72 +40,76 @@ class Snake {
 		this.canChangeDirection = true;
 
 		// Captures the key pressed by the player
-		var _this = this;
-		document.onkeydown = function (event) {
+		var _this = this; 
+		document.addEventListener('keydown', function (event) 
+		{
+			// Enter
+			if (key == 13) 
+			{
 
-			_this.controller(event.which);
+				this.game.isPaused = !this.game.isPaused;
 
-		};
+			}
+
+			// If it is paused it will not receive any other input
+			if (this.game.isPaused)
+				return;
+			
+			// Shift
+			if (key == 16)
+			{
+				this.looping = !this.looping;
+				console.log(this.looping);
+			}
+
+			// Left
+			if (key == 37 && this.ySpeed != 0 && this.canChangeDirection) 
+			{
+
+				this.canChangeDirection = false;
+				this.xSpeed = -1;
+				this.ySpeed = 0;
+
+			}
+
+			// Right
+			if (key == 39 && this.ySpeed != 0 && this.canChangeDirection) 
+			{
+
+				this.canChangeDirection = false;
+				this.xSpeed = 1;
+				this.ySpeed = 0;
+
+			}
+
+			// Up
+			if (key == 38 && this.xSpeed != 0 && this.canChangeDirection) 
+			{
+
+				this.canChangeDirection = false;
+				this.xSpeed = 0;
+				this.ySpeed = -1;
+
+			}
+
+			// Down
+			if (key == 40 && this.xSpeed != 0 && this.canChangeDirection) 
+			{
+
+				this.canChangeDirection = false;
+				this.xSpeed = 0;
+				this.ySpeed = 1;
+
+			}
+		});
 
 	}
 
     // Snake control
-	controller(key) {
-        
-        // xSpeed != 0 snake = Left / Right
-        // ySpeed != 0 snake = Up / Down
-
-		// Enter
-		if (key == 13) {
-
-			this.game.isPaused = ! this.game.isPaused;
-
-		}
-
-		// If it is paused it will not receive any other input
-		if (this.game.isPaused)
-			return;
-
-		// Left
-		if (key == 37 && this.ySpeed != 0 && this.canChangeDirection) {
-
-			this.canChangeDirection = false;
-			this.xSpeed = -1;
-			this.ySpeed = 0;
-
-		}
-
-		// Right
-		if (key == 39 && this.ySpeed != 0 && this.canChangeDirection) {
-
-			this.canChangeDirection = false;
-			this.xSpeed = 1;
-			this.ySpeed = 0;
-
-		}
-
-		// Up
-		if (key == 38 && this.xSpeed != 0 && this.canChangeDirection) {
-
-			this.canChangeDirection = false;
-			this.xSpeed = 0;
-			this.ySpeed = -1;
-
-		}
-
-		// Down
-		if (key == 40 && this.xSpeed != 0 && this.canChangeDirection) {
-
-			this.canChangeDirection = false;
-			this.xSpeed = 0;
-			this.ySpeed = 1;
-
-		}
-
-	}
-
+	
 	// Add a new section to the end of the snake
-	addPart() {
+	addPart() 
+	{
 
 		var lastPart = this.parts[this.parts.length - 1];
 		this.parts.push(new SnakePart(lastPart.x, lastPart.y));
@@ -113,11 +117,12 @@ class Snake {
 	}
 
 	// Update the snake in the canvas
-	update() {
+	update() 
+	{
 		this.x += this.xSpeed;
 		this.y += this.ySpeed;
 
-        if(document.getElementById('loopCanvasCheckbox').checked)
+        if(this.looping)
 		{
        		// Loop the snake around the canvas instead of ending the game
 			if (this.x > this.game.width - 1)
@@ -143,13 +148,6 @@ class Snake {
 			if (this.y <= 0) 
 				this.isAlive = false;
 		}
-
-		
-
-        
-
-
-		
 
 		// Draws each section starting by the last
 		for (var index = this.parts.length - 1; index >= 0; index--) {
