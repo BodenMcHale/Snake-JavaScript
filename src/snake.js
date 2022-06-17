@@ -3,6 +3,8 @@
 // Move Score, Max score, Deaths, to bottom of screen
 // Add toggle to looping vs instant game over, use Shift key
 // Add lostrabbitdigital.com hyperlink <a href='https://www.lostrabbitdigital.com><a>
+
+
 // Section of the snake, only has the X and Y coordinate
 class SnakePart {
 
@@ -115,29 +117,38 @@ class Snake {
 		this.x += this.xSpeed;
 		this.y += this.ySpeed;
 
-        // Loop the snake around the canvas instead of ending the game
-        /*
-		if (this.x > this.game.width - 1)
-			this.x = 0;
-		if (this.x < 0) 
-			this.x = this.game.width -1
-		
-		if (this.y > this.game.height - 1)
-			this.y = 0;
-		if (this.y < 0) 
-			this.y = this.game.height - 1;
-        */
+        if(document.getElementById('loopCanvasCheckbox').checked)
+		{
+       		// Loop the snake around the canvas instead of ending the game
+			if (this.x > this.game.width - 1)
+				this.x = 0;
+			if (this.x < 0) 
+				this.x = this.game.width -1
 
-        // End the game when the snake touches the edge of the canvas
-		if (this.x >= this.game.width - 1)
-            this.isAlive = false;
-		if (this.x <= 0) 
-			this.isAlive = false;
+			if (this.y > this.game.height - 1)
+				this.y = 0;
+			if (this.y < 0) 
+				this.y = this.game.height - 1;
+		}
+		else
+		{
+			// End the game when the snake touches the edge of the canvas
+			if (this.x >= this.game.width - 1)
+				this.isAlive = false;
+			if (this.x <= 0) 
+				this.isAlive = false;
+			
+			if (this.y >= this.game.height - 1)
+				this.isAlive = false;
+			if (this.y <= 0) 
+				this.isAlive = false;
+		}
+
 		
-		if (this.y >= this.game.height - 1)
-            this.isAlive = false;
-		if (this.y <= 0) 
-            this.isAlive = false;
+
+        
+
+
 		
 
 		// Draws each section starting by the last
@@ -208,12 +219,7 @@ class Food {
 	}
 
 }
-
-/*-------------------------------------------------------------------
-*
-*	The game's grid. Can be of any size you want.
-*
-*------------------------------------------------------------------*/
+// The game grid, this can be any size.
 class DrawGrid {
 
 	constructor(game) {
