@@ -1,351 +1,146 @@
-/*
-    License
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    MIT License
-    Copyright (c) 2022, Boden McHale
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
-	
-    Future Modifications
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    - Redo key inputs
+let canvas = document.getElementById('game');
+let context = canvas.getContext('2d');
 
-    Author
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Twitter: @Boden_McHale https://twitter.com/Boden_McHale
-    Blog: https://lostrabbitdigital.com/blog/
-    Last Updated: June 16th 2022
-*/
+// the canvas width & height, snake x & y, and the apple x & y, all need to be a multiples of the grid size in order for collision detection to work
+// (e.g. 16 * 25 = 400)
+let grid = 16;
+let count = 0;
 
-// Section of the snake, only has the X and Y coordinate
-class SnakePart 
+let snake = 
 {
-	constructor(x, y) 
-	{
-		this.x = x;
-		this.y = y;
-	}
+    // Initial starting location
+    x: getRandomInt(0, canvas.width),
+    y: getRandomInt(0, canvas.height),
+
+    // Snake velociry
+    dx: grid,
+    dy: 0,
+
+    // Snake cells
+    cells: [],
+
+    // Length of the snake
+    // Set this here for the inital length
+    maxCells: 2
+};
+
+let apple = {
+    x: getRandomInt(0, canvas.width),
+    y: getRandomInt(0, canvas.height)
+};
+
+// get random whole numbers in a specific range
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
 }
 
-// The whole snake
-class Snake 
-{
-	constructor(game, x, y, initialPartsAmount) 
-	{
-		this.game = game;
-		this.x = x;
-		this.y = y;
-		this.isAlive = true;
-		this.looping = document.getElementById('loopCanvasCheckbox').checked;
+// game loop
+function loop() {
+  requestAnimationFrame(loop);
 
-		// Determines if the snake is going Up / Down or Left / Right
-		this.xSpeed = 1;
-		this.ySpeed = 0;
+  // slow game loop to 15 fps instead of 60 (60/15 = 4)
+  if (++count < 4) {
+    return;
+  }
 
-		// Create the sections of the snake
-		this.parts = [];
-		for (var index = 0; index < initialPartsAmount; index++)
-			this.parts.push(new SnakePart(x-index, y));
+  count = 0;
+  context.clearRect(0,0,canvas.width,canvas.height);
 
-		// Captures the key pressed by the player
-		var _this = this; 
-		document.addEventListener('keydown', function (event) 
-		{
-			_this.controller(event.which);
-		});
-	}
+  // move snake by it's velocity
+  snake.x += snake.dx;
+  snake.y += snake.dy;
 
-    // Snake control
-	controller(key) 
-	{
-		// Enter
-		if (key == 13) 
-			this.game.isPaused = !this.game.isPaused;
+  // wrap snake position horizontally on edge of screen
+  if (snake.x < 0) {
+    snake.x = canvas.width - grid;
+  }
+  else if (snake.x >= canvas.width) {
+    snake.x = 0;
+  }
 
-		// If it is paused it will not receive any other input
-		if (this.game.isPaused)
-			return;
-		
-		// Shift
-		if (key == 16)
-			this.looping = !this.looping;
+  // wrap snake position vertically on edge of screen
+  if (snake.y < 0) {
+    snake.y = canvas.height - grid;
+  }
+  else if (snake.y >= canvas.height) {
+    snake.y = 0;
+  }
 
-		// Left
-		if (key == 37 && this.ySpeed != 0) 
-		{
-			this.canChangeDirection = false;
-			this.xSpeed = -1;
-			this.ySpeed = 0;
-		}
+  // keep track of where snake has been. front of the array is always the head
+  snake.cells.unshift({x: snake.x, y: snake.y});
 
-		// Right
-		if (key == 39 && this.ySpeed != 0) 
-		{
-			this.canChangeDirection = false;
-			this.xSpeed = 1;
-			this.ySpeed = 0;
-		}
+  // remove cells as we move away from them
+  if (snake.cells.length > snake.maxCells) {
+    snake.cells.pop();
+  }
 
-		// Up
-		if (key == 38 && this.xSpeed != 0) 
-		{
-			this.canChangeDirection = false;
-			this.xSpeed = 0;
-			this.ySpeed = -1;
-		}
+  // draw apple
+  context.fillStyle = 'red';
+  context.fillRect(apple.x, apple.y, grid-1, grid-1);
 
-		// Down 
-		if (key == 40 && this.xSpeed != 0) 
-		{
-			this.canChangeDirection = false;
-			this.xSpeed = 0;
-			this.ySpeed = 1;
-		}
-	}
+  // draw snake one cell at a time
+  context.fillStyle = 'green';
+  snake.cells.forEach(function(cell, index) {
 
-	// Add a new section to the end of the snake
-	addPart() 
-	{
-		var lastPart = this.parts[this.parts.length - 1];
-		this.parts.push(new SnakePart(lastPart.x, lastPart.y));
-	}
+    // drawing 1 px smaller than the grid creates a grid effect in the snake body so you can see how long it is
+    context.fillRect(cell.x, cell.y, grid-1, grid-1);
 
-	// Update the snake in the canvas
-	update() 
-	{
-		this.x += this.xSpeed;
-		this.y += this.ySpeed;
+    // snake ate apple
+    if (cell.x === apple.x && cell.y === apple.y) {
+      snake.maxCells++;
 
-        if(this.looping)
-		{
-       		// Loop the snake around the canvas instead of ending the game
-			if (this.x > this.game.width - 1)
-				this.x = 0;
-			if (this.x < 0) 
-				this.x = this.game.width -1
+      // canvas is 400x400 which is 25x25 grids
+      apple.x = getRandomInt(0, 25) * grid;
+      apple.y = getRandomInt(0, 25) * grid;
+    }
 
-			if (this.y > this.game.height - 1)
-				this.y = 0;
-			if (this.y < 0) 
-				this.y = this.game.height - 1;
-		}
-		else
-		{
-			// End the game when the snake touches the edge of the canvas
-			if (this.x >= this.game.width - 1)
-				this.isAlive = false;
-			if (this.x <= 0) 
-				this.isAlive = false;
-			
-			if (this.y >= this.game.height - 1)
-				this.isAlive = false;
-			if (this.y <= 0) 
-				this.isAlive = false;
-		}
+    // check collision with all cells after this one (modified bubble sort)
+    for (let i = index + 1; i < snake.cells.length; i++) {
 
-		// Draws each section starting by the last
-		for (var index = this.parts.length - 1; index >= 0; index--) 
-		{
-			var part = this.parts[index];
+      // snake occupies same space as a body part. reset game
+      if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+        snake.x = 160;
+        snake.y = 160;
+        snake.cells = [];
+        snake.maxCells = 4;
+        snake.dx = grid;
+        snake.dy = 0;
 
-			if (index != 0)
-			{
-				part.x = this.parts[index - 1].x;
-				part.y = this.parts[index - 1].y;
-
-				// If the head touches any section of the body the game ends
-				if (this.x == part.x && this.y == part.y) 
-					this.die();
-			}
-			else 
-			{
-				part.x = this.x;
-				part.y = this.y;
-			}
-            
-            // Snake
-			this.game.grid.fillTile(part.x, part.y, "#fac800");
-		}
-	}
-
-	// End the game
-	die() 
-	{
-		this.isAlive = false;
-	}
-
+        apple.x = getRandomInt(0, 25) * grid;
+        apple.y = getRandomInt(0, 25) * grid;
+      }
+    }
+  });
 }
 
-// Calculate and place food
-class Food 
-{
-	constructor(game) 
-	{
-		this.game = game;
-		this.placeFood();
-	}
+// listen to keyboard events to move the snake
+document.addEventListener('keydown', function(e) {
+  // prevent snake from backtracking on itself by checking that it's
+  // not already moving on the same axis (pressing left while moving
+  // left won't do anything, and pressing right while moving left
+  // shouldn't let you collide with your own body)
 
-	// Places a food in a random tile in the grid
-	placeFood() 
-	{
-		this.x = Math.floor(Math.random() * this.game.width);
-		this.y = Math.floor(Math.random() * this.game.height);
-	}
+  // left arrow key
+  if (e.which === 37 && snake.dx === 0) {
+    snake.dx = -grid;
+    snake.dy = 0;
+  }
+  // up arrow key
+  else if (e.which === 38 && snake.dy === 0) {
+    snake.dy = -grid;
+    snake.dx = 0;
+  }
+  // right arrow key
+  else if (e.which === 39 && snake.dx === 0) {
+    snake.dx = grid;
+    snake.dy = 0;
+  }
+  // down arrow key
+  else if (e.which === 40 && snake.dy === 0) {
+    snake.dy = grid;
+    snake.dx = 0;
+  }
+});
 
-	// Draw the food in the grid 
-	update() 
-	{
-        // Food
-		this.game.grid.fillTile(this.x, this.y, "#00e5fa");
-	}
-}
-// The game grid, this can be any size
-class DrawGrid 
-{
-	constructor(game) 
-	{
-		this.game = game;
-		this.grid = [];
-
-		this.buildGrid();
-	}
-
-	buildGrid() 
-	{
-		// Loop through all the rows of the grid
-		for (var x = 0; x < this.game.width; x++) 
-		{
-			this.grid[x] = [];
-
-			// Loop through all the columns of the grid
-			for (var y = 0; y < this.game.height; y++) 
-			{
-				// Create a tile to add to the grid
-				var divTile = document.createElement("div");
-				divTile.style.position = "absolute";
-				divTile.style.width = divTile.style.height = this.game.size + "px";
-				divTile.style.left = x * this.game.size + "px";
-				divTile.style.top = y * this.game.size + "px";
-
-				// Add the newly created tile to the grid
-				this.game.divStage.appendChild(divTile);
-
-				this.grid[x][y] = 
-				{
-					div: divTile,
-					isFilled: false,
-					color: "white"
-				};
-			}
-		}
-	}
-
-	fillTile(x, y, color) 
-	{
-		if (this.grid[x]) 
-		{
-			if (this.grid[x][y]) 
-			{
-				var tile = this.grid[x][y];
-
-				tile.isFilled = true;
-				tile.color = color;
-			}
-		}
-	}
-
-	update() 
-	{
-		for (var x = 0; x < this.game.width; x++) 
-		{
-			for (var y = 0; y < this.game.height; y++) 
-			{
-				var tile = this.grid[x][y];
-
-                // Background
-				var newBackgroundColor = tile.isFilled ? tile.color : "#000000";
-				tile.div.style.background = newBackgroundColor;
-
-				// Needs to be reset incase the next frame needs it filled
-				tile.isFilled = false;
-			}
-		}
-	}
-}
-
-class Game 
-{
-	constructor(size, fps, divStageId, spanScoreId, spanDeathsId, spanMaxScoreId) 
-	{
-		this.width = size;
-		this.height = size;
-		this.size = size;
-		this.fps = fps;
-		this.isPaused = true;
-
-		this.divStage = document.getElementById(divStageId);
-		this.spanScore = document.getElementById(spanScoreId);
-		this.spanDeaths = document.getElementById(spanDeathsId);
-		this.spanMaxScore = document.getElementById(spanMaxScoreId);
-
-		this.score = 0;
-		this.deaths = 0;
-		this.maxScore = this.score;
-		this.grid = new DrawGrid(this);
-		this.food = new Food(this);
-		this.snake = new Snake(this, 5, 2, 3);
-
-		//Start loop.
-		var _this = this;
-		this.interval = setInterval(function () 
-		{
-			_this.update();
-		}, 1000/this.fps);
-	}
-
-	update() 
-	{
-		if (this.isPaused)
-			return;
-
-		this.spanScore.innerHTML = this.score;
-		this.spanDeaths.innerHTML = this.deaths;
-		this.spanMaxScore.innerHTML = this.maxScore;
-
-		if (!this.snake.isAlive) 
-		{
-			this.maxScore = this.score > this.maxScore ? this.score : this.maxScore;
-			this.score = 0;
-			this.deaths++;
-
-			this.snake = new Snake(this, 5, 2, 3);
-			this.food.placeFood();
-		}
-
-		this.food.update();
-		this.snake.update();
-
-		// Add a new section to the snake if it touches the food
-		if (this.snake.x == this.food.x && this.snake.y == this.food.y) 
-		{
-			this.food.placeFood();
-			this.snake.addPart();
-			this.score++;
-		}
-
-		this.grid.update();
-	}
-}
+// start the game
+requestAnimationFrame(loop);

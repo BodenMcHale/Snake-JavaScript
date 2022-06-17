@@ -1,23 +1,44 @@
+<!DOCTYPE html>
 <html>
-<head>
-	<title>Snake Game</title>
-</head>
-<body>
-	<div id="contents" style="position:relative">
-		<a href="https://www.lostrabbitdigital.com" style="font-family: 'Courier New', Courier, monospace;">Lost Rabbit Digital</a>
-		<p style="font-family: 'Courier New', Courier, monospace;">Move with the Arrow Keys</p>
-		<p style="font-family: 'Courier New', Courier, monospace;">Pause and resume with 'Enter'</p>
-		<p style="font-family: 'Courier New', Courier, monospace;">Toggle looping with 'Shift'</p>
-		<input type="checkbox" id="loopCanvasCheckbox" name="loopCanvas" value="loop">
-		<label for="loopCanvas" style="font-family:'Courier New', Courier, monospace;"> Loop by default</label><br>
-		<h3 style="font-family: 'Courier New', Courier, monospace;">Score: <span id="score"></span> </h3>
-		<h3 style="font-family: 'Courier New', Courier, monospace;">Max score: <span id="max_score"></span> </h3>
-		<h3 style="font-family: 'Courier New', Courier, monospace;">Deaths: <span id="deaths"></span> </h3>
-	</div>
-	<div id="stage" style="position:relative"></div>
-</body>
+	<head>
+		<title>Snake</title>
+		<meta charset="UTF-8">
+
+		<style>
+			html, body 
+			{
+				height: 100%;
+				margin: 0;
+			}
+
+			body 
+			{
+				background: rgb(0, 0, 0);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			canvas 
+			{
+				border: 5px solid rgb(255, 234, 0);
+			}
+		</style>
+	</head>
+
+	<body>
+		<div style="padding-right:35px">
+            <a href="https://www.lostrabbitdigital.com" style="font-family: 'Courier New', Courier, monospace;">Lost Rabbit Digital</a>
+            <p style="font-family: 'Courier New', Courier, monospace;">Move with the Arrow Keys</p>
+            <p style="font-family: 'Courier New', Courier, monospace;">Pause with 'Enter'</p>
+            <input type="checkbox" id="muteCanvasCheckbox" name="muteCanvas" value="mute">
+            <label for="loopCanvas" style="font-family:'Courier New', Courier, monospace;"> Mute</label><br>
+            <h3 style="font-family: 'Courier New', Courier, monospace;">Score: <span id="score"></span> </h3>
+            <h3 style="font-family: 'Courier New', Courier, monospace;">Max score: <span id="max_score"></span> </h3>
+            <h3 style="font-family: 'Courier New', Courier, monospace;">Lives: <span id="lives"></span> </h3>
+        </div>
+	</body>
+
+	<canvas width="400" height="400" id="game"></canvas>
 	<script src="snake.js"></script>
-	<script type="text/javascript">
-		var game = new Game(20, 10, "stage", "score", "deaths", "max_score");
-	</script>
 </html>
