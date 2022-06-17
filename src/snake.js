@@ -158,40 +158,30 @@ function collisions()
   });
 }
 
-
-    // prevent snake from backtracking on itself by checking that it's
-    // not already moving on the same axis (pressing left while moving
-    // left won't do anything, and pressing right while moving left
-    // shouldn't let you collide with your own body)
-  /**
-    // left arrow key
-    if (e.keyCode == 37 && snake.dx == 0) 
-    {
+function controls()
+{
+  // Allows input from WASD, wasd, Arrow Keys
+  document.addEventListener('keydown', 
+  function(event) 
+  {
+    if(event.key === 'ArrowLeft' && snake.dx == 0 || event.key === 'A' && snake.dx == 0 || event.key === 'a' && snake.dx == 0) {
       snake.dx = -canvasGrid;
       snake.dy = 0;
     }
-
-    // up arrow key
-    if (e.keyCode == 38 && snake.dy == 0) 
-    {
-      snake.dy = -canvasGrid;
-      snake.dx = 0;
-    }
-
-    // right arrow key
-    if (e.keyCode == 39 && snake.dx == 0) 
-    {
+    else if(event.key === 'ArrowRight' && snake.dx == 0 || event.key === 'D' && snake.dx == 0 || event.key === 'd' && snake.dx == 0) {
       snake.dx = canvasGrid;
       snake.dy = 0;
     }
-
-    // down arrow key
-    if (e.keyCode == 40 && snake.dy == 0) 
-    {
+    else if(event.key === 'ArrowUp' && snake.dy == 0 || event.key === 'W' && snake.dy == 0 || event.key === 'w' && snake.dy == 0) {
+      snake.dy = -canvasGrid;
+      snake.dx = 0;
+    }
+    else if(event.key === 'ArrowDown' && snake.dy == 0 || event.key === 'S' && snake.dy == 0 || event.key === 's' && snake.dy == 0) {
       snake.dy = canvasGrid;
       snake.dx = 0;
     }
-    */
+  });
+}
 
 function game() 
 {
@@ -212,30 +202,16 @@ function game()
   wrapSnake();
   feedSnake();
   collisions();
+  controls();
 
   // keep track of where snake has been. front of the array is always the head
   snake.cells.unshift({x: snake.x, y: snake.y});
 
+  // Add movement
   // remove cells as we move away from them
   if (snake.cells.length > snake.maxCells) {
     snake.cells.pop();
   }
-
-  document.addEventListener('keydown', function(event) {
-    if(event.key === 'ArrowLeft' || event.key === 'A') {
-        console.log('Left was pressed');
-    }
-    else if(event.key === 'ArrowRight' || event.key === 'D') {
-        console.log('Right was pressed');
-    }
-    else if(event.key === 'ArrowUp' || event.key === 'W') {
-      console.log('Up was pressed');
-    }
-    else if(event.key === 'ArrowDown' || event.key === 'S') {
-    console.log('Down was pressed');
-    }
-  });
-
 }
 
 
