@@ -18,7 +18,6 @@ class SnakePart {
 // The whole snake
 class Snake 
 {
-
 	constructor(game, x, y, initialPartsAmount) 
 	{
 
@@ -26,6 +25,7 @@ class Snake
 		this.x = x;
 		this.y = y;
 		this.isAlive = true;
+		this.looping = document.getElementById('loopCanvasCheckbox').checked;
 
 		// Determines if the snake is going Up / Down or Left / Right
 		this.xSpeed = 1;
@@ -43,70 +43,81 @@ class Snake
 		var _this = this; 
 		document.addEventListener('keydown', function (event) 
 		{
-			// Enter
-			if (key == 13) 
-			{
 
-				this.game.isPaused = !this.game.isPaused;
+			_this.controller(event.which);
 
-			}
-
-			// If it is paused it will not receive any other input
-			if (this.game.isPaused)
-				return;
-			
-			// Shift
-			if (key == 16)
-			{
-				this.looping = !this.looping;
-				console.log(this.looping);
-			}
-
-			// Left
-			if (key == 37 && this.ySpeed != 0 && this.canChangeDirection) 
-			{
-
-				this.canChangeDirection = false;
-				this.xSpeed = -1;
-				this.ySpeed = 0;
-
-			}
-
-			// Right
-			if (key == 39 && this.ySpeed != 0 && this.canChangeDirection) 
-			{
-
-				this.canChangeDirection = false;
-				this.xSpeed = 1;
-				this.ySpeed = 0;
-
-			}
-
-			// Up
-			if (key == 38 && this.xSpeed != 0 && this.canChangeDirection) 
-			{
-
-				this.canChangeDirection = false;
-				this.xSpeed = 0;
-				this.ySpeed = -1;
-
-			}
-
-			// Down
-			if (key == 40 && this.xSpeed != 0 && this.canChangeDirection) 
-			{
-
-				this.canChangeDirection = false;
-				this.xSpeed = 0;
-				this.ySpeed = 1;
-
-			}
 		});
 
 	}
 
     // Snake control
-	
+	controller(key) 
+	{
+        
+        // xSpeed != 0 snake = Left / Right
+        // ySpeed != 0 snake = Up / Down
+
+		// Enter
+		if (key == 13) 
+		{
+
+			this.game.isPaused = !this.game.isPaused;
+
+		}
+
+		// If it is paused it will not receive any other input
+		if (this.game.isPaused)
+			return;
+		
+		// Shift
+		if (key == 16)
+		{
+			this.looping = !this.looping;
+			console.log(this.looping);
+		}
+
+		// Left
+		if (key == 37 && this.ySpeed != 0 && this.canChangeDirection) 
+		{
+
+			this.canChangeDirection = false;
+			this.xSpeed = -1;
+			this.ySpeed = 0;
+
+		}
+
+		// Right
+		if (key == 39 && this.ySpeed != 0 && this.canChangeDirection) 
+		{
+
+			this.canChangeDirection = false;
+			this.xSpeed = 1;
+			this.ySpeed = 0;
+
+		}
+
+		// Up
+		if (key == 38 && this.xSpeed != 0 && this.canChangeDirection) 
+		{
+
+			this.canChangeDirection = false;
+			this.xSpeed = 0;
+			this.ySpeed = -1;
+
+		}
+
+		// Down
+		if (key == 40 && this.xSpeed != 0 && this.canChangeDirection) 
+		{
+
+			this.canChangeDirection = false;
+			this.xSpeed = 0;
+			this.ySpeed = 1;
+
+		}
+
+	}
+
 	// Add a new section to the end of the snake
 	addPart() 
 	{
