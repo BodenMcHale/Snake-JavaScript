@@ -10,10 +10,14 @@ let canvasGrid = 16;
 
 // Game loop
 let loopCount = 0;
+let isPaused = false;
 
 let foodColor = `rgb(0, 250, 230)`;
 let snakeColor = `rgb(250, 0, 230)`;
 
+let score = 0;
+let maxScore = score;
+let lives = 3;
 
 let snake = 
 {
@@ -77,6 +81,31 @@ function getRandomInt(min, max)
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
+function playSFXDeath()
+{
+  if (!mute)
+  {
+    //let sfxMusic = new Audio('audio/death.mp3');
+  }
+}
+
+function playSFXFood()
+{
+  if (!mute)
+  {
+    //let sfxMusic = new Audio('audio/food.mp3');
+    
+  }
+}
+
+function playSFXMusic()
+{
+  if (!mute)
+  {
+    //let sfxMusic = new Audio('audio/music.mp3');
+  }
+}
+
 function wrapSnake()
 {
   // wrap snake position horizontally on edge of screen
@@ -96,6 +125,18 @@ function wrapSnake()
   }
 }
 
+function drawUI()
+{
+  maxScore = document.getElementById('max_score').innerHTML;
+}
+
+function drawFood()
+{
+  // draw food
+  context.fillStyle = foodColor;
+  context.fillRect(food.x, food.y, canvasGrid-1, canvasGrid-1);
+}
+
 function drawSnake()
 {
     // draw snake one cell at a time
@@ -112,13 +153,6 @@ function moveSnake()
   // move snake by it's velocity
   snake.x += snake.dx;
   snake.y += snake.dy;
-}
-
-function drawFood()
-{
-  // draw food
-  context.fillStyle = foodColor;
-  context.fillRect(food.x, food.y, canvasGrid-1, canvasGrid-1);
 }
 
 function feedSnake()
@@ -164,21 +198,25 @@ function controls()
   document.addEventListener('keydown', 
   function(event) 
   {
-    if(event.key === 'ArrowLeft' && snake.dx == 0 || event.key === 'A' && snake.dx == 0 || event.key === 'a' && snake.dx == 0) {
+    if (event.key === 'ArrowLeft' && snake.dx == 0 || event.key === 'A' && snake.dx == 0 || event.key === 'a' && snake.dx == 0) {
       snake.dx = -canvasGrid;
       snake.dy = 0;
     }
-    else if(event.key === 'ArrowRight' && snake.dx == 0 || event.key === 'D' && snake.dx == 0 || event.key === 'd' && snake.dx == 0) {
+    else if (event.key === 'ArrowRight' && snake.dx == 0 || event.key === 'D' && snake.dx == 0 || event.key === 'd' && snake.dx == 0) {
       snake.dx = canvasGrid;
       snake.dy = 0;
     }
-    else if(event.key === 'ArrowUp' && snake.dy == 0 || event.key === 'W' && snake.dy == 0 || event.key === 'w' && snake.dy == 0) {
+    else if (event.key === 'ArrowUp' && snake.dy == 0 || event.key === 'W' && snake.dy == 0 || event.key === 'w' && snake.dy == 0) {
       snake.dy = -canvasGrid;
       snake.dx = 0;
     }
-    else if(event.key === 'ArrowDown' && snake.dy == 0 || event.key === 'S' && snake.dy == 0 || event.key === 's' && snake.dy == 0) {
+    else if (event.key === 'ArrowDown' && snake.dy == 0 || event.key === 'S' && snake.dy == 0 || event.key === 's' && snake.dy == 0) {
       snake.dy = canvasGrid;
       snake.dx = 0;
+    }
+    else if (event.key === 'Enter')
+    {
+      isPaused = !isPaused;
     }
   });
 }
@@ -186,6 +224,9 @@ function controls()
 function game() 
 {
   requestAnimationFrame(game);
+
+  if (isPaused)
+    return;
 
   // Set the FPS to 15
   // 60/15 = 4
@@ -196,6 +237,9 @@ function game()
   loopCount = 0;
   context.clearRect(0, 0, canvas.width, canvas.height);
 
+  maxScore = score > maxScore ? score : maxScore;
+  mute = document.getElementById('muteCanvasCheckbox').checked;
+  drawUI();
   drawFood();
   drawSnake();
   moveSnake();
