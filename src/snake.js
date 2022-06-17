@@ -14,6 +14,7 @@ let loopCount = 0;
 let foodColor = `rgb(0, 250, 230)`;
 let snakeColor = `rgb(250, 0, 230)`;
 
+
 let snake = 
 {
     // Initial starting location
@@ -157,39 +158,40 @@ function collisions()
   });
 }
 
-function controls()
-{
-  // listen to keyboard events to move the snake
-  document.addEventListener('keydown', function(e) 
-  {
+
     // prevent snake from backtracking on itself by checking that it's
     // not already moving on the same axis (pressing left while moving
     // left won't do anything, and pressing right while moving left
     // shouldn't let you collide with your own body)
-
+  /**
     // left arrow key
-    if (e.which === 37 && snake.dx === 0) {
+    if (e.keyCode == 37 && snake.dx == 0) 
+    {
       snake.dx = -canvasGrid;
       snake.dy = 0;
     }
+
     // up arrow key
-    else if (e.which === 38 && snake.dy === 0) {
+    if (e.keyCode == 38 && snake.dy == 0) 
+    {
       snake.dy = -canvasGrid;
       snake.dx = 0;
     }
+
     // right arrow key
-    else if (e.which === 39 && snake.dx === 0) {
+    if (e.keyCode == 39 && snake.dx == 0) 
+    {
       snake.dx = canvasGrid;
       snake.dy = 0;
     }
+
     // down arrow key
-    else if (e.which === 40 && snake.dy === 0) {
+    if (e.keyCode == 40 && snake.dy == 0) 
+    {
       snake.dy = canvasGrid;
       snake.dx = 0;
     }
-  });
-
-}
+    */
 
 function game() 
 {
@@ -219,9 +221,23 @@ function game()
     snake.cells.pop();
   }
 
+  document.addEventListener('keydown', function(event) {
+    if(event.key === 'ArrowLeft' || event.key === 'A') {
+        console.log('Left was pressed');
+    }
+    else if(event.key === 'ArrowRight' || event.key === 'D') {
+        console.log('Right was pressed');
+    }
+    else if(event.key === 'ArrowUp' || event.key === 'W') {
+      console.log('Up was pressed');
+    }
+    else if(event.key === 'ArrowDown' || event.key === 'S') {
+    console.log('Down was pressed');
+    }
+  });
+
 }
 
-controls();
 
 // start the game
 requestAnimationFrame(game);
