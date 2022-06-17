@@ -1,16 +1,17 @@
 let canvas = document.getElementById('game');
 let context = canvas.getContext('2d');
 
-// the canvas width & height, snake x & y, and the apple x & y, all need to be a multiples of the grid size in order for collision detection to work
-// (e.g. 16 * 25 = 400)
+// Canvas Width/Height, Snake X/Y, Apple X/Y must be divisible by Grid
+// Canvas / Grid = Whole Int
+// 400 / 16 = 25
 let grid = 16;
 let count = 0;
 
 let snake = 
 {
     // Initial starting location
-    x: getRandomInt(0, canvas.width),
-    y: getRandomInt(0, canvas.height),
+    x: randomXPositionOnGrid(),
+    y: randomYPositionOnGrid(),
 
     // Snake velociry
     dx: grid,
@@ -24,22 +25,57 @@ let snake =
     maxCells: 2
 };
 
-let apple = {
-    x: getRandomInt(0, canvas.width),
-    y: getRandomInt(0, canvas.height)
+let apple = 
+{
+    x: randomXPositionOnGrid(),
+    y: randomYPositionOnGrid()
 };
 
-// get random whole numbers in a specific range
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
+
+function randomXPositionOnGrid()
+{
+    ranPosX = Math.floor(Math.random() * ((canvas.width) - 0)) + 0;
+
+    while(ranPosX % 16 !== 0)
+    {
+        ranPosX++;
+    }
+
+    return ranPosX;
 }
 
-// game loop
-function loop() {
-  requestAnimationFrame(loop);
+function randomYPositionOnGrid()
+{
+    ranPosX = Math.floor(Math.random() * ((canvas.width) - 0)) + 0;
+
+    while(ranPosX % 16 !== 0)
+    {
+        ranPosX++;
+    }
+
+    return ranPosX;
+}
+
+// Get a random whole number within a specific range
+function getRandomInt(min, max) 
+{
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+// Get a random whole number within a specific range
+function getRandomInt(min, max) 
+{
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+// The main game loop
+function game() 
+{
+  requestAnimationFrame(game);
 
   // slow game loop to 15 fps instead of 60 (60/15 = 4)
-  if (++count < 4) {
+  // 60/15 = 4
+  if (count++ < 4) {
     return;
   }
 
@@ -143,4 +179,4 @@ document.addEventListener('keydown', function(e) {
 });
 
 // start the game
-requestAnimationFrame(loop);
+requestAnimationFrame(game);
