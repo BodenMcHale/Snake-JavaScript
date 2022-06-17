@@ -1,11 +1,15 @@
 let canvas = document.getElementById('game');
 let context = canvas.getContext('2d');
 
-// Canvas Width/Height, Snake X/Y, Apple X/Y must be divisible by Grid
-// Canvas / Grid = Whole Int
+// Canvas Width/Height, Snake X/Y, food X/Y must be divisible by canvasGrid
+// Canvas / canvasGrid = Whole Int
 // 400 / 16 = 25
-let grid = 16;
-let count = 0;
+canvas.height = 400;
+canvas.width = 400;
+let canvasGrid = 16;
+
+// Game loop
+let loopCount = 0;
 
 let snake = 
 {
@@ -14,7 +18,7 @@ let snake =
     y: randomYPositionOnGrid(),
 
     // Snake velociry
-    dx: grid,
+    dx: canvasGrid,
     dy: 0,
 
     // Snake cells
@@ -25,18 +29,18 @@ let snake =
     maxCells: 2
 };
 
-let apple = 
+let food = 
 {
     x: randomXPositionOnGrid(),
     y: randomYPositionOnGrid()
 };
 
-
+// Gets a random X position that is divisible by the canvasGrid
 function randomXPositionOnGrid()
 {
     ranPosX = Math.floor(Math.random() * ((canvas.width) - 0)) + 0;
 
-    while(ranPosX % 16 !== 0)
+    while(ranPosX % canvasGrid !== 0)
     {
         ranPosX++;
     }
@@ -44,11 +48,12 @@ function randomXPositionOnGrid()
     return ranPosX;
 }
 
+// Gets a random Y position that is divisible by the canvasGrid
 function randomYPositionOnGrid()
 {
     ranPosX = Math.floor(Math.random() * ((canvas.width) - 0)) + 0;
 
-    while(ranPosX % 16 !== 0)
+    while(ranPosX % canvasGrid !== 0)
     {
         ranPosX++;
     }
@@ -73,13 +78,13 @@ function game()
 {
   requestAnimationFrame(game);
 
-  // slow game loop to 15 fps instead of 60 (60/15 = 4)
+  // Set the FPS to 15
   // 60/15 = 4
-  if (count++ < 4) {
+  if (loopCount++ < 4) {
     return;
   }
 
-  count = 0;
+  loopCount = 0;
   context.clearRect(0,0,canvas.width,canvas.height);
 
   // move snake by it's velocity
@@ -88,7 +93,7 @@ function game()
 
   // wrap snake position horizontally on edge of screen
   if (snake.x < 0) {
-    snake.x = canvas.width - grid;
+    snake.x = canvas.width - canvasGrid;
   }
   else if (snake.x >= canvas.width) {
     snake.x = 0;
@@ -96,7 +101,7 @@ function game()
 
   // wrap snake position vertically on edge of screen
   if (snake.y < 0) {
-    snake.y = canvas.height - grid;
+    snake.y = canvas.height - canvasGrid;
   }
   else if (snake.y >= canvas.height) {
     snake.y = 0;
@@ -110,24 +115,24 @@ function game()
     snake.cells.pop();
   }
 
-  // draw apple
+  // draw food
   context.fillStyle = 'red';
-  context.fillRect(apple.x, apple.y, grid-1, grid-1);
+  context.fillRect(food.x, food.y, canvasGrid-1, canvasGrid-1);
 
   // draw snake one cell at a time
   context.fillStyle = 'green';
   snake.cells.forEach(function(cell, index) {
 
-    // drawing 1 px smaller than the grid creates a grid effect in the snake body so you can see how long it is
-    context.fillRect(cell.x, cell.y, grid-1, grid-1);
+    // drawing 1 px smaller than the canvasGrid creates a canvasGrid effect in the snake body so you can see how long it is
+    context.fillRect(cell.x, cell.y, canvasGrid-1, canvasGrid-1);
 
-    // snake ate apple
-    if (cell.x === apple.x && cell.y === apple.y) {
+    // snake ate food
+    if (cell.x === food.x && cell.y === food.y) {
       snake.maxCells++;
 
       // canvas is 400x400 which is 25x25 grids
-      apple.x = getRandomInt(0, 25) * grid;
-      apple.y = getRandomInt(0, 25) * grid;
+      food.x = getRandomInt(0, 25) * canvasGrid;
+      food.y = getRandomInt(0, 25) * canvasGrid;
     }
 
     // check collision with all cells after this one (modified bubble sort)
@@ -139,11 +144,11 @@ function game()
         snake.y = 160;
         snake.cells = [];
         snake.maxCells = 4;
-        snake.dx = grid;
+        snake.dx = canvasGrid;
         snake.dy = 0;
 
-        apple.x = getRandomInt(0, 25) * grid;
-        apple.y = getRandomInt(0, 25) * grid;
+        food.x = getRandomInt(0, 25) * canvasGrid;
+        food.y = getRandomInt(0, 25) * canvasGrid;
       }
     }
   });
@@ -158,22 +163,22 @@ document.addEventListener('keydown', function(e) {
 
   // left arrow key
   if (e.which === 37 && snake.dx === 0) {
-    snake.dx = -grid;
+    snake.dx = -canvasGrid;
     snake.dy = 0;
   }
   // up arrow key
   else if (e.which === 38 && snake.dy === 0) {
-    snake.dy = -grid;
+    snake.dy = -canvasGrid;
     snake.dx = 0;
   }
   // right arrow key
   else if (e.which === 39 && snake.dx === 0) {
-    snake.dx = grid;
+    snake.dx = canvasGrid;
     snake.dy = 0;
   }
   // down arrow key
   else if (e.which === 40 && snake.dy === 0) {
-    snake.dy = grid;
+    snake.dy = canvasGrid;
     snake.dx = 0;
   }
 });
