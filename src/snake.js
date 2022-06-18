@@ -45,7 +45,7 @@ let gridCellAmount = canvas.height / canvasGrid;
 let loopCount = 0;
 let isPaused = false;
 
-let foodColor = `rgb(0, 250, 230)`;
+let foodColor = `rgb(0, 250, 200)`;
 let snakeBodyColor = `rgb(150, 0, 150)`;
 let snakeHeadColor = `rgb(250, 0, 250)`;
 
