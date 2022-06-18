@@ -57,8 +57,6 @@ let maxScore = score;
 let lives = 3;
 
 // Set the FPS/Game speed
-// Set the FPS to 15
-// 60/15 = 4
 let targetFPS = 25;
 let targetFPSConverted = 60/targetFPS;
 
