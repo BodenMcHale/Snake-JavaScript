@@ -120,6 +120,33 @@ function getRandomInt(min, max)
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
+function resetGame()
+{
+  snake.x = 160;
+  snake.y = 160;
+  snake.cells = [];
+  snake.maxCells = 1;
+  snake.dx = canvasGrid;
+  snake.dy = 0;
+  lives = 3;
+  score = 0;
+
+  spawnFood();
+}
+
+function resetPlayer()
+{
+  snake.x = 160;
+  snake.y = 160;
+  snake.cells = [];
+  snake.maxCells = 1;
+  snake.dx = canvasGrid;
+  snake.dy = 0;
+  lives--;
+  score = 0;
+
+  spawnFood();
+}
 function playSFXDeath()
 {
   if (!mute)
@@ -173,56 +200,20 @@ function doNotWrapSnake()
 
   if (snake.x < 0) 
   {
-    snake.x = 160;
-    snake.y = 160;
-    snake.cells = [];
-    snake.maxCells = 1;
-    snake.dx = canvasGrid;
-    snake.dy = 0;
-    lives--;
-    score = 0;
-
-    spawnFood();
+    resetPlayer();
   }
   else if (snake.x >= canvas.width) 
   {
-    snake.x = 160;
-    snake.y = 160;
-    snake.cells = [];
-    snake.maxCells = 1;
-    snake.dx = canvasGrid;
-    snake.dy = 0;
-    lives--;
-    score = 0;
-
-    spawnFood();
+    resetPlayer();
   }
 
   if (snake.y < 0) 
   {
-    snake.x = 160;
-    snake.y = 160;
-    snake.cells = [];
-    snake.maxCells = 1;
-    snake.dx = canvasGrid;
-    snake.dy = 0;
-    lives--;
-    score = 0;
-
-    spawnFood();
+    resetPlayer();
   }
   else if (snake.y >= canvas.height) 
   {
-    snake.x = 160;
-    snake.y = 160;
-    snake.cells = [];
-    snake.maxCells = 1;
-    snake.dx = canvasGrid;
-    snake.dy = 0;
-    lives--;
-    score = 0;
-  
-    spawnFood();
+    resetPlayer();
   }
 }
 
@@ -285,7 +276,7 @@ function feedSnake()
   });
 }
 
-function collisions()
+function checkCollisions()
 {
   snake.cells.forEach(function(cell, index) 
   {
@@ -295,19 +286,18 @@ function collisions()
       // If the Snake collides with itself, kill the player
       if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) 
       {
-        snake.x = 160;
-        snake.y = 160;
-        snake.cells = [];
-        snake.maxCells = 1;
-        snake.dx = canvasGrid;
-        snake.dy = 0;
-        lives--;
-        score = 0;
-
-        spawnFood();
+        resetPlayer();
       }
     }
   });
+}
+
+function checkLives()
+{
+  if (lives <= 0)
+  {
+    resetGame();
+  }
 }
 
 function controls()
@@ -367,7 +357,8 @@ function game()
   //wrapSnake();
   doNotWrapSnake();
   feedSnake();
-  collisions();
+  checkCollisions();
+  checkLives();
 
   // keep track of where snake has been. front of the array is always the head
   snake.cells.unshift({x: snake.x, y: snake.y});
