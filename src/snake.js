@@ -22,11 +22,8 @@
     Future Modifications
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   	- SFX
-    - Score
-    - High Score
     - Convert FPS counter to function, halfway done
     - Add difficulty levels which are different speeds
-    - Remove looping mechanic
     - Add thicker yellow border to favicon
     - Add mute button
     - Bug: Sometimes food doesn't spawn
