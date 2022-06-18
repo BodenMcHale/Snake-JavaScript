@@ -27,6 +27,7 @@
     - Add thicker yellow border to favicon
     - Add mute button
     - Bug: Sometimes food doesn't spawn
+    - Update README
 
     Author
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -53,12 +54,19 @@ let isPaused = false;
 let foodColor = `rgb(0, 250, 230)`;
 let snakeBodyColor = `rgb(150, 0, 150)`;
 let snakeHeadColor = `rgb(250, 0, 250)`;
+
 // Border around Snake and Food
 let pixelOffset = 2;
 
 let score = 0;
 let maxScore = score;
 let lives = 3;
+
+// Set the FPS/Game speed
+// Set the FPS to 15
+// 60/15 = 4
+let targetFPS = 15;
+let targetFPSConverted = 60/targetFPS;
 
 let snake = 
 {
@@ -74,7 +82,6 @@ let snake =
     cells: [],
 
     // Length of the snake
-    // Set this here for the inital length
     maxCells: 1
 };
 
@@ -234,20 +241,23 @@ function spawnFood()
   food.y = getRandomInt(0, 25) * canvasGrid;
 }
 
+
 function drawSnake()
 {
     // Draw one cell of the Snake at a time
     snake.cells.forEach(function(cell, index) 
     {
       context.fillStyle = snakeBodyColor;
+
       // Draw the body - pixelOffset to see a border around each cell
       context.fillRect(cell.x, cell.y, canvasGrid-pixelOffset, canvasGrid-pixelOffset);
       
       for (let i = index; i < 1; i++) 
       {
         context.fillStyle = snakeHeadColor;
+
         // Draw the head - pixelOffset to see a border around each cell
-        // This layers another rectangle on top of the body
+        // This layers one rectangle on top of the body
         context.fillRect(cell.x, cell.y, canvasGrid - pixelOffset, canvasGrid - pixelOffset);
       }
     });
@@ -282,9 +292,7 @@ function checkCollisions()
     {
       // If the Snake collides with itself, kill the player
       if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) 
-      {
         resetPlayer();
-      }
     }
   });
 }
@@ -292,9 +300,7 @@ function checkCollisions()
 function checkLives()
 {
   if (lives <= 0)
-  {
     resetGame();
-  }
 }
 
 function controls()
@@ -303,48 +309,48 @@ function controls()
   document.addEventListener('keydown', 
   function(event) 
   {
-    if (event.key === 'ArrowLeft' && snake.dx == 0 || event.key === 'A' && snake.dx == 0 || event.key === 'a' && snake.dx == 0) {
+    if (event.key === 'ArrowLeft' && snake.dx == 0 || event.key === 'A' && snake.dx == 0 || event.key === 'a' && snake.dx == 0) 
+    {
       snake.dx = -canvasGrid;
       snake.dy = 0;
     }
-    else if (event.key === 'ArrowRight' && snake.dx == 0 || event.key === 'D' && snake.dx == 0 || event.key === 'd' && snake.dx == 0) {
+    else if (event.key === 'ArrowRight' && snake.dx == 0 || event.key === 'D' && snake.dx == 0 || event.key === 'd' && snake.dx == 0) 
+    {
       snake.dx = canvasGrid;
       snake.dy = 0;
     }
-    else if (event.key === 'ArrowUp' && snake.dy == 0 || event.key === 'W' && snake.dy == 0 || event.key === 'w' && snake.dy == 0) {
+    else if (event.key === 'ArrowUp' && snake.dy == 0 || event.key === 'W' && snake.dy == 0 || event.key === 'w' && snake.dy == 0) 
+    {
       snake.dy = -canvasGrid;
       snake.dx = 0;
     }
-    else if (event.key === 'ArrowDown' && snake.dy == 0 || event.key === 'S' && snake.dy == 0 || event.key === 's' && snake.dy == 0) {
+    else if (event.key === 'ArrowDown' && snake.dy == 0 || event.key === 'S' && snake.dy == 0 || event.key === 's' && snake.dy == 0) 
+    {
       snake.dy = canvasGrid;
       snake.dx = 0;
     } 
     else if (event.key === 'Enter')
-    {
       isPaused = !isPaused;
-    }
   });
 }
 
-function game() 
+function gameLoop() 
 {
-  requestAnimationFrame(game);
+  requestAnimationFrame(gameLoop);
 
   if (isPaused)
     return;
 
-  // Set the FPS to 15
-  // 60/15 = 4
-  let targetFPS = 15;
-  let targetFPSConverted = 60/targetFPS;
-  console.log(targetFPSConverted);
-  if (loopCount++ < 4) {
+  if (loopCount++ < targetFPSConverted)
     return;
-  }
 
+  // Reset the loop count for the fps limiter to work
   loopCount = 0;
+
+  // Clear the screen to avoid stretching bug
   context.clearRect(0, 0, canvas.width, canvas.height);
 
+  // Only raise the high score if score is higher than maxScore
   maxScore = score > maxScore ? score : maxScore;
 
   drawUI();
@@ -357,19 +363,17 @@ function game()
   checkCollisions();
   checkLives();
 
-  // keep track of where snake has been. front of the array is always the head
+  // Keep track of where the snake is, the first index in the array is the head
   snake.cells.unshift({x: snake.x, y: snake.y});
 
-  // Add movement
-  // remove cells as we move away from them
-  if (snake.cells.length > snake.maxCells) {
+  // Pop cells as we move away from them
+  if (snake.cells.length > snake.maxCells)
     snake.cells.pop();
-  }
 }
 
-// Call controls() outside of game() to avoid missing key inputs
+// Call controls() outside of game() to avoid missing key inputs due to fps limit
 controls();
 
 
-// start the game
-requestAnimationFrame(game);
+// Start the game loop
+requestAnimationFrame(gameLoop);
