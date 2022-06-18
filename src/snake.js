@@ -21,13 +21,6 @@
 	
     Future Modifications
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  	- SFX
-    - Convert FPS counter to function, halfway done
-    - Add difficulty levels which are different speeds
-    - Add thicker yellow border to favicon
-    - Add mute button
-    - Bug: Sometimes food doesn't spawn
-    - Update README
 
     Author
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -43,9 +36,10 @@ let context = canvas.getContext('2d');
 // Canvas Width/Height, Snake X/Y, food X/Y must be divisible by canvasGrid
 // Canvas / canvasGrid = Whole Int
 // 400 / 16 = 25
-canvas.height = 400;
-canvas.width = 400;
+canvas.height = 720;
+canvas.width = 720;
 let canvasGrid = 16;
+let gridCellAmount = canvas.height / canvasGrid;
 
 // Game loop
 let loopCount = 0;
@@ -56,7 +50,7 @@ let snakeBodyColor = `rgb(150, 0, 150)`;
 let snakeHeadColor = `rgb(250, 0, 250)`;
 
 // Border around Snake and Food
-let pixelOffset = 2;
+let pixelOffset = 0;
 
 let score = 0;
 let maxScore = score;
@@ -65,7 +59,7 @@ let lives = 3;
 // Set the FPS/Game speed
 // Set the FPS to 15
 // 60/15 = 4
-let targetFPS = 15;
+let targetFPS = 25;
 let targetFPSConverted = 60/targetFPS;
 
 let snake = 
@@ -237,8 +231,8 @@ function drawFood()
 
 function spawnFood()
 {
-  food.x = getRandomInt(0, 25) * canvasGrid;
-  food.y = getRandomInt(0, 25) * canvasGrid;
+  food.x = getRandomInt(0, gridCellAmount) * canvasGrid;
+  food.y = getRandomInt(0, gridCellAmount) * canvasGrid;
 }
 
 
