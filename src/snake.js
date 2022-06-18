@@ -21,6 +21,7 @@
 	
     Future Modifications
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    - SFX
 
     Author
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -103,7 +104,7 @@ function getRandomYPositionOnGrid()
 
     while(ranPosX % canvasGrid !== 0)
     {
-        ranPosX++;
+      ranPosX++;
     }
 
     return ranPosX;
@@ -143,11 +144,12 @@ function resetPlayer()
 
   spawnFood();
 }
+
 function playSFXDeath()
 {
   if (!mute)
   {
-    //let sfxMusic = new Audio('audio/death.mp3');
+    // let sfxMusic = new Audio('audio/death.mp3');
   }
 }
 
@@ -155,8 +157,7 @@ function playSFXFood()
 {
   if (!mute)
   {
-    //let sfxMusic = new Audio('audio/food.mp3');
-    
+    // let sfxMusic = new Audio('audio/food.mp3');
   }
 }
 
@@ -164,7 +165,7 @@ function playSFXMusic()
 {
   if (!mute)
   {
-    //let sfxMusic = new Audio('audio/music.mp3');
+    // let sfxMusic = new Audio('audio/music.mp3');
   }
 }
 
@@ -222,7 +223,6 @@ function drawUI()
 
 function drawFood()
 {
-  // draw food
   context.fillStyle = foodColor;
   context.fillRect(food.x, food.y, canvasGrid-pixelOffset, canvasGrid-pixelOffset);
 }
@@ -232,7 +232,6 @@ function spawnFood()
   food.x = getRandomInt(0, gridCellAmount) * canvasGrid;
   food.y = getRandomInt(0, gridCellAmount) * canvasGrid;
 }
-
 
 function drawSnake()
 {
@@ -284,7 +283,9 @@ function checkCollisions()
     {
       // If the Snake collides with itself, kill the player
       if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) 
+      {
         resetPlayer();
+      }
     }
   });
 }
@@ -292,7 +293,9 @@ function checkCollisions()
 function checkLives()
 {
   if (lives <= 0)
+  {
     resetGame();
+  }
 }
 
 function controls()
@@ -322,7 +325,9 @@ function controls()
       snake.dx = 0;
     } 
     else if (event.key === 'Enter')
+    {
       isPaused = !isPaused;
+    }
   });
 }
 
@@ -331,10 +336,14 @@ function gameLoop()
   requestAnimationFrame(gameLoop);
 
   if (isPaused)
+  {
     return;
+  }
 
   if (loopCount++ < targetFPSConverted)
+  {
     return;
+  }
 
   // Reset the loop count for the fps limiter to work
   loopCount = 0;
@@ -360,7 +369,9 @@ function gameLoop()
 
   // Pop cells as we move away from them
   if (snake.cells.length > snake.maxCells)
+  {
     snake.cells.pop();
+  }
 }
 
 // Call controls() outside of game() to avoid missing key inputs due to fps limit
