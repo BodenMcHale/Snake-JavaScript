@@ -127,30 +127,6 @@ function resetPlayer()
   spawnFood();
 }
 
-function playSFXDeath()
-{
-  if (!mute)
-  {
-    // let sfxMusic = new Audio('audio/death.mp3');
-  }
-}
-
-function playSFXFood()
-{
-  if (!mute)
-  {
-    // let sfxMusic = new Audio('audio/food.mp3');
-  }
-}
-
-function playSFXMusic()
-{
-  if (!mute)
-  {
-    // let sfxMusic = new Audio('audio/music.mp3');
-  }
-}
-
 function wrapSnake()
 {
   // Wrap the position of the Snake horizontally
@@ -174,9 +150,7 @@ function wrapSnake()
   }
 }
 
-function doNotWrapSnake()
-{
-
+function doNotWrapSnake() {
   if (snake.x < 0) 
   {
     resetPlayer();
@@ -196,7 +170,7 @@ function doNotWrapSnake()
   }
 }
 
-function drawUI()
+function updateUI()
 {
   document.getElementById('max_score').innerHTML = maxScore;
   document.getElementById('score').innerHTML = score;
@@ -336,7 +310,7 @@ function gameLoop()
   // Only raise the high score if score is higher than maxScore
   maxScore = score > maxScore ? score : maxScore;
 
-  drawUI();
+  updateUI();
   drawFood();
   drawSnake();
   moveSnake();
