@@ -6,7 +6,7 @@
     Author
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Twitter: @Boden_McHale https://twitter.com/Boden_McHale
-    Blog: https://lostrabbitdigital.com/blog/
+    Site: https://lostrabbitdigital.com
     Last Updated: June 16th 2022
 */
 
