@@ -1,8 +1,9 @@
 /*
     Future Modifications
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    [] - SFX
     [] - Control speed with Ctrl / Shift
+    [] - Add sfx for Eat, Death, Change direction 
+    [] - Add music
 
     Author
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -39,7 +40,7 @@ let maxScore = score;
 let lives = 3;
 
 // Set the FPS/Game speed
-let targetFPS = 25;
+let targetFPS = 25; // TODO: Change this to be mutable with Ctrl / Shift in the main game loop.
 let targetFPSConverted = 60/targetFPS;
 
 let snake = 
@@ -48,7 +49,7 @@ let snake =
     x: getRandomXPositionOnGrid(),
     y: getRandomYPositionOnGrid(),
 
-    // Snake velociry
+    // Snake velocity
     dx: canvasGrid,
     dy: 0,
 
