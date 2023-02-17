@@ -4,14 +4,12 @@
 		<title>Snake</title>
 		<link rel="icon" type="image/x-icon" href="images/favicon.ico">
 		<meta charset="UTF-8">
-
 		<style>
 			html, body 
 			{
 				height: 100%;
 				margin: 0;
 			}
-
 			body 
 			{
 				background: rgb(0, 0, 0);
@@ -19,34 +17,30 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
+				font-family: 'Courier New', Courier, monospace
 			}
-
 			canvas 
 			{
 				border: 5px solid rgb(255, 255, 0);
 			}
 		</style>
 	</head>
-
 	<body>
 		<section class="content">
 			<div style="padding-right:35px">
-				<a href="https://twitter.com/Boden_McHale" style="font-family: 'Courier New', Courier, monospace;">Twitter</a>
-				
+				<a href='https://twitter.com/Boden_McHale'>Twitter</a>
 				<div>
-					<h3 style="font-family: 'Courier New', Courier, monospace;">Score: <span id="score"></span> </h3>
-					<h3 style="font-family: 'Courier New', Courier, monospace;">High score: <span id="max_score"></span> </h3>
-					<h3 style="font-family: 'Courier New', Courier, monospace;">Lives: <span id="lives"></span> </h3>
+					<h3>Score: <span id="score"></span> </h3>
+					<h3>High score: <span id="max_score"></span> </h3>
+					<h3>Lives: <span id="lives"></span> </h3>
 				</div>
-	
 				<div>
-					<p style="font-family: 'Courier New', Courier, monospace;">Move with the Arrow Keys / WASD</p>
-					<p style="font-family: 'Courier New', Courier, monospace;">Pause with 'Enter'</p>
+					<p>Move with the Arrow Keys / WASD</p>
+					<p>Pause with Enter / Space</p>
 				</div>
 			</div>
 		</section>
 	</body>
-
 	<section class="gameWindow">
 		<canvas id="game"></canvas>
 		<script src="snake.js"></script>
