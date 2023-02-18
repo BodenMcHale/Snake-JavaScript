@@ -39,7 +39,7 @@ let maxScore = score
 let lives = 3
 
 // Set the FPS/Game speed
-const targetFPS = 25 // TODO: Change this to be mutable with Ctrl / Shift in the main game loop.
+let targetFPS = 25
 const targetFPSConverted = 60 / targetFPS
 
 // Whether or not the snake can wrap.
@@ -156,6 +156,7 @@ function updateUI () {
   document.getElementById('score').innerHTML = score
   document.getElementById('lives').innerHTML = lives
   document.getElementById('wrap').innerHTML = allowSnakeWrap
+  document.getElementById('speed').innerHTML = targetFPS
 }
 
 function drawFood () {
@@ -242,6 +243,12 @@ function controls () {
 
       if (event.key === 'L' || event.key === 'l') {
         allowSnakeWrap = !allowSnakeWrap
+      }
+
+      if (event.key === 'Control') {
+        targetFPS = targetFPS - 5
+      } else if (event.key === 'Shift') {
+        targetFPS = targetFPS + 5
       }
     })
 }
